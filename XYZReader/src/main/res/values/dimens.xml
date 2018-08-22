@@ -1,0 +1,17 @@
+<resources>
+    <!-- detail -->
+    <dimen name="detail_title_text_size">28sp</dimen>
+    <dimen name="detail_body_text_size">18sp</dimen>
+    <item name="detail_body_line_spacing_multiplier" format="float" type="fraction">1.25</item>
+
+    <!-- FAB -->
+    <dimen name="fab_elevation">6dp</dimen>
+    <dimen name="fab_press_translation_z">6dp</dimen>
+    <dimen name="fab_margin">24dp</dimen>
+
+
+    <dimen name="logo_end_padding">16dp</dimen>
+    <dimen name="logo_start_padding">16dp</dimen>
+
+    <dimen name="content_inset_start">64dp</dimen>
+</resources>
