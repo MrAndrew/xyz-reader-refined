@@ -26,5 +26,5 @@
     <dimen name="detail_toolbar_title_vert_margin">8dp</dimen>
 
     <dimen name="action_up_vert_margin">8dp</dimen>
-    <dimen name="action_up_horiz_margin">8dp</dimen>
+    <dimen name="action_up_horiz_margin">6dp</dimen>
 </resources>

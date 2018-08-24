@@ -1,7 +1,10 @@
 package com.example.xyzreader.ui;
 
-import android.app.ActivityOptions;
+
 import android.app.Fragment;
+import com.example.xyzreader.data.ArticleLoader;
+
+import android.app.ActivityOptions;
 import android.app.LoaderManager;
 import android.content.Intent;
 import android.content.Loader;
