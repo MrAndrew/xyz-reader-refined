@@ -2,6 +2,8 @@ package com.example.xyzreader.ui;
 
 
 import android.app.Fragment;
+
+import com.bumptech.glide.Glide;
 import com.example.xyzreader.data.ArticleLoader;
 
 import android.app.ActivityOptions;
@@ -28,6 +30,7 @@ import android.support.v7.app.ActionBar;
 import android.text.Html;
 import android.text.format.DateUtils;
 import android.text.method.LinkMovementMethod;
+import android.transition.TransitionInflater;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -90,6 +93,8 @@ public class ArticleDetailFragment extends Fragment implements
         arguments.putLong(ARG_ITEM_ID, itemId);
         ArticleDetailFragment fragment = new ArticleDetailFragment();
         fragment.setArguments(arguments);
+        fragment.getSharedElementEnterTransition();
+        fragment.getSharedElementReturnTransition();
         return fragment;
     }
 
@@ -105,8 +110,6 @@ public class ArticleDetailFragment extends Fragment implements
         mStatusBarFullOpacityBottom = getResources().getDimensionPixelSize(
                 R.dimen.detail_card_top_margin);
         setHasOptionsMenu(true);
-
-//        setSharedElementEnterTransition(TransitionInflater.from(getContext()).inflateTransition(R.transition.change_image_transform));
     }
 
     private ArticleDetailActivity getActivityCast() {
@@ -160,6 +163,7 @@ public class ArticleDetailFragment extends Fragment implements
         }
 
         mPhotoView = (ImageView) mRootView.findViewById(R.id.photo);
+        mPhotoView.hasTransientState();
         mPhotoContainerView = mRootView.findViewById(R.id.photo_container);
 
         mStatusBarColorDrawable = new ColorDrawable(0);
@@ -278,6 +282,11 @@ public class ArticleDetailFragment extends Fragment implements
 
             }
             bodyView.setText(Html.fromHtml(mCursor.getString(ArticleLoader.Query.BODY).replaceAll("(\r\n|\n)", "<br />")));
+            mRootView.findViewById(R.id.details_meta_bar)
+                    .setBackgroundColor(getColor(getContext(), R.color.transparent));
+            updateStatusBar();
+
+
             ImageLoaderHelper.getInstance(getActivity()).getImageLoader()
                     .get(mCursor.getString(ArticleLoader.Query.PHOTO_URL), new ImageLoader.ImageListener() {
                         @Override
@@ -296,6 +305,7 @@ public class ArticleDetailFragment extends Fragment implements
 
                         }
                     });
+
         } else {
             mRootView.setVisibility(View.GONE);
             titleView.setText("N/A");

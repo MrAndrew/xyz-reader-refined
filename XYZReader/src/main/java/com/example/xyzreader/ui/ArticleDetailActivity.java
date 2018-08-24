@@ -10,6 +10,9 @@ import android.os.Bundle;
 import android.support.v13.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
+import android.transition.Transition;
+import android.transition.TransitionInflater;
+import android.transition.TransitionSet;
 import android.util.TypedValue;
 import android.view.MenuItem;
 import android.view.View;
@@ -80,7 +83,7 @@ public class ArticleDetailActivity extends AppCompatActivity
         mUpButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                onSupportNavigateUp();
+                onBackPressed();
             }
         });
 
@@ -115,13 +118,15 @@ public class ArticleDetailActivity extends AppCompatActivity
             onBackPressed();
             return true;
         }
-        return false;
+        return super.onOptionsItemSelected(item);
     }
 
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-//        supportFinishAfterTransition();
+        //NOTE: This is working to change the image back to the grid view thumbnail, but not always
+        //the correct image position...need to figure out how to write that into the code..
+        supportFinishAfterTransition();
     }
 
     @Override
@@ -175,13 +180,12 @@ public class ArticleDetailActivity extends AppCompatActivity
         @Override
         public Fragment getItem(int position) {
             mCursor.moveToPosition(position);
-            //            Transition changeImageTransform = TransitionInflater.from(getApplicationContext()).
-////                    inflateTransition(R.transition.change_image_transform);
-////            Transition changeBoundsTransform = TransitionInflater.from(getApplicationContext()).
-////                    inflateTransition(R.transition.change_bounds);
-////            returnFrag.setSharedElementEnterTransition(changeImageTransform);
-////            returnFrag.setEnterTransition(changeBoundsTransform);
-            return ArticleDetailFragment.newInstance(mCursor.getLong(ArticleLoader.Query._ID));
+            Fragment detailFragment = ArticleDetailFragment.newInstance(mCursor.getLong(ArticleLoader.Query._ID));
+            Transition changePic = TransitionInflater.from(getApplicationContext())
+                    .inflateTransition(R.transition.change_image_transform);
+
+            detailFragment.setSharedElementEnterTransition(changePic);
+            return detailFragment;
         }
 
         @Override

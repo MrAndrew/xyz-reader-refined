@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
+import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
@@ -21,6 +22,9 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.annotation.GlideModule;
+import com.bumptech.glide.module.AppGlideModule;
 import com.example.xyzreader.R;
 import com.example.xyzreader.data.ArticleLoader;
 import com.example.xyzreader.data.ItemsContract;
@@ -82,8 +86,6 @@ public class ArticleListActivity extends AppCompatActivity implements
                 }
             }
         });
-
-//        final View toolbarContainerView = findViewById(R.id.toolbar_container);
 
         mRecyclerView = (RecyclerView) findViewById(R.id.recycler_view);
         getLoaderManager().initLoader(0, null, this);
@@ -194,22 +196,18 @@ public class ArticleListActivity extends AppCompatActivity implements
 
         public void openArticleViewActivity(View view, Intent intent) {
 
-            startActivity(intent, ActivityOptions.makeSceneTransitionAnimation(ArticleListActivity.this).toBundle());
+            View sharedPic = view.findViewById(R.id.thumbnail);
 
-//            View sharedPic = view.findViewById(R.id.thumbnail);
-//
-//            String transitionName = getString(R.string.shared_transition_photo);
-//
-//            ViewCompat.setTransitionName(sharedPic, transitionName);
-//
-//            //noinspection unchecked
-//            ActivityOptionsCompat options =
-//                    ActivityOptionsCompat.makeSceneTransitionAnimation(ArticleListActivity.this,
-//                            sharedPic,   // The view which starts the transition
-//                            transitionName    // The transitionName of the view we’re transitioning to
-//                    );
-//
-//            ActivityCompat.startActivity(ArticleListActivity.this, intent, options.toBundle());
+            String transitionName = getString(R.string.shared_transition_photo);
+
+            //noinspection unchecked
+            ActivityOptionsCompat options =
+                    ActivityOptionsCompat.makeSceneTransitionAnimation(ArticleListActivity.this,
+                            sharedPic,   // The view which starts the transition
+                            transitionName    // The transitionName of the view we’re transitioning to
+                    );
+
+            startActivity(intent, options.toBundle());
         }
 
         @Override
