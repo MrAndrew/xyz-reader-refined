@@ -3,7 +3,6 @@ package com.example.xyzreader.ui;
 
 import android.app.Fragment;
 
-import com.bumptech.glide.Glide;
 import com.example.xyzreader.data.ArticleLoader;
 
 import android.app.ActivityOptions;
@@ -30,11 +29,11 @@ import android.support.v7.app.ActionBar;
 import android.text.Html;
 import android.text.format.DateUtils;
 import android.text.method.LinkMovementMethod;
-import android.transition.TransitionInflater;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -42,7 +41,6 @@ import android.widget.TextView;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageLoader;
 import com.example.xyzreader.R;
-import com.example.xyzreader.data.ArticleLoader;
 
 import static android.support.v4.content.ContextCompat.getColor;
 
@@ -60,11 +58,12 @@ public class ArticleDetailFragment extends Fragment implements
     private Cursor mCursor;
     private long mItemId;
     private View mRootView;
-    private int mMutedColor = 0xFF333333;
     private NestedScrollView mScrollView;
     private ColorDrawable mStatusBarColorDrawable;
     private int mTopInset;
     private int mScrollY;
+    public static final String ARG_POSITION = "position";
+    private int position;
 
     private View mPhotoContainerView;
     private ImageView mPhotoView;
@@ -88,13 +87,13 @@ public class ArticleDetailFragment extends Fragment implements
     public ArticleDetailFragment() {
     }
 
-    public static ArticleDetailFragment newInstance(long itemId) {
+    public static ArticleDetailFragment newInstance(long itemId, int position) {
         Bundle arguments = new Bundle();
         arguments.putLong(ARG_ITEM_ID, itemId);
+        arguments.putInt(ARG_POSITION, position);
+
         ArticleDetailFragment fragment = new ArticleDetailFragment();
         fragment.setArguments(arguments);
-        fragment.getSharedElementEnterTransition();
-        fragment.getSharedElementReturnTransition();
         return fragment;
     }
 
@@ -104,6 +103,7 @@ public class ArticleDetailFragment extends Fragment implements
 
         if (getArguments().containsKey(ARG_ITEM_ID)) {
             mItemId = getArguments().getLong(ARG_ITEM_ID);
+            position = getArguments().getInt(ARG_POSITION);
         }
 
         mIsCard = getResources().getBoolean(R.bool.detail_is_card);
@@ -191,7 +191,7 @@ public class ArticleDetailFragment extends Fragment implements
                 });
         }
 
-        bindViews();
+//        bindViews();
         updateStatusBar();
         return mRootView;
     }
@@ -209,6 +209,7 @@ public class ArticleDetailFragment extends Fragment implements
             float f = progress(mScrollY,
                     mStatusBarFullOpacityBottom - mTopInset * 3,
                     mStatusBarFullOpacityBottom - mTopInset);
+            int mMutedColor = 0xFF333333;
             color = Color.argb((int) (255 * f),
                     (int) (Color.red(mMutedColor) * 0.9),
                     (int) (Color.green(mMutedColor) * 0.9),
@@ -281,11 +282,20 @@ public class ArticleDetailFragment extends Fragment implements
                                 + "</font>"));
 
             }
-            bodyView.setText(Html.fromHtml(mCursor.getString(ArticleLoader.Query.BODY).replaceAll("(\r\n|\n)", "<br />")));
+            bodyView.setText(Html.fromHtml(mCursor.getString(ArticleLoader.Query.BODY)
+                    .substring(0,1000)
+                    .replaceAll("(\r\n|\n)", "<br />")));
             mRootView.findViewById(R.id.details_meta_bar)
                     .setBackgroundColor(getColor(getContext(), R.color.transparent));
             updateStatusBar();
 
+//            Picasso.get()
+//                    .load(mCursor.getString(ArticleLoader.Query.PHOTO_URL))
+//                    .into(mPhotoView);
+//
+//            mRootView.findViewById(R.id.details_meta_bar)
+//                    .setBackgroundColor(getColor(getContext(), R.color.transparent));
+//            updateStatusBar();
 
             ImageLoaderHelper.getInstance(getActivity()).getImageLoader()
                     .get(mCursor.getString(ArticleLoader.Query.PHOTO_URL), new ImageLoader.ImageListener() {
@@ -303,6 +313,19 @@ public class ArticleDetailFragment extends Fragment implements
                         @Override
                         public void onErrorResponse(VolleyError volleyError) {
 
+                        }
+                    });
+
+            //Needed to allow transition view to occur because of different transition names set
+            //dynamically, onPreDraw() being something to take note of in the future
+            mPhotoView.getViewTreeObserver()
+                    .addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
+                        @Override
+                        public boolean onPreDraw() {
+                            mPhotoView.getViewTreeObserver().removeOnPreDrawListener(this);
+                            mPhotoView.setTransitionName("photo"+position);
+                            getActivity().startPostponedEnterTransition();
+                            return true;
                         }
                     });
 

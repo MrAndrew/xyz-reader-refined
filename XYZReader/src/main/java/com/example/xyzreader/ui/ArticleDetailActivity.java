@@ -10,14 +10,10 @@ import android.os.Bundle;
 import android.support.v13.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
-import android.transition.Transition;
-import android.transition.TransitionInflater;
-import android.transition.TransitionSet;
 import android.util.TypedValue;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowInsets;
 
 import com.example.xyzreader.R;
 import com.example.xyzreader.data.ArticleLoader;
@@ -49,7 +45,9 @@ public class ArticleDetailActivity extends AppCompatActivity
                         View.SYSTEM_UI_FLAG_LAYOUT_STABLE);
 
         setContentView(R.layout.activity_article_detail);
-
+        //needed because the animation needs the view to load later before it knows what to animate
+        //and since animations happen early on, the postpone is needed.
+        postponeEnterTransition();
         getLoaderManager().initLoader(0, null, this);
 
         mPagerAdapter = new MyPagerAdapter(getFragmentManager());
@@ -180,11 +178,7 @@ public class ArticleDetailActivity extends AppCompatActivity
         @Override
         public Fragment getItem(int position) {
             mCursor.moveToPosition(position);
-            Fragment detailFragment = ArticleDetailFragment.newInstance(mCursor.getLong(ArticleLoader.Query._ID));
-            Transition changePic = TransitionInflater.from(getApplicationContext())
-                    .inflateTransition(R.transition.change_image_transform);
-
-            detailFragment.setSharedElementEnterTransition(changePic);
+            Fragment detailFragment = ArticleDetailFragment.newInstance(mCursor.getLong(ArticleLoader.Query._ID), position);
             return detailFragment;
         }
 

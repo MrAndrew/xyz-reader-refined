@@ -2,17 +2,18 @@
 <transitionSet
     xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <!--
+
     <changeBounds
-        android:duration="1500" />
-       <targets>
-            <target android:targetId="@+id/thumbnail" />
-            <target android:targetId="@+id/photo" />
-        </targets>
-    </changeBounds>-->
+        android:duration="500" />
+    <!--
+   <targets>
+        <target android:targetId="@+id/thumbnail" />
+        <target android:targetId="@+id/photo" />
+    </targets>
+</changeBounds>-->
 
     <changeImageTransform
-        android:duration="1500" />
+        android:duration="1000" />
 <!--        <targets>
             <target android:targetId="@+id/thumbnail" />
             <target android:targetId="@+id/photo" />

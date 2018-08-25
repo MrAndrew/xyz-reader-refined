@@ -24,7 +24,7 @@
 
             <TextView
                 android:id="@+id/article_body"
-                style="?android:attr/textAppearanceMedium"
+                style="Base.TextAppearance.AppCompat.Body2"
                 android:paddingBottom="@dimen/detail_body_vert_margin"
                 android:paddingTop="@dimen/detail_body_vert_margin"
                 android:paddingStart="@dimen/detail_body_horiz_margin"
@@ -34,7 +34,6 @@
                 android:layout_height="wrap_content"
                 android:lineSpacingMultiplier="@fraction/detail_body_line_spacing_multiplier"
                 android:textColor="@android:color/black"
-                android:textColorLink="@color/theme_accent"
                 android:textSize="@dimen/detail_body_text_size"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintLeft_toLeftOf="parent"
@@ -56,6 +55,7 @@
         app:fabSize="normal"
         app:layout_anchor="@id/article_body"
         app:layout_anchorGravity="end"
-        app:pressedTranslationZ="12dp" />
+        app:pressedTranslationZ="12dp"
+        android:focusable="true" />
 
 </android.support.design.widget.CoordinatorLayout>
