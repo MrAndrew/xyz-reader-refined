@@ -1,5 +1,4 @@
 = XYZ Reader
 
-This repository stores the code for the XYZ Reader project that I modified from Udacity's starting code found [here](https://github.com/udacity/xyz-reader-starter-code)
-
-
+This repository stores the code for the XYZ Reader project that I modified from Udacity's starting code found
+at this repo: (https://github.com/udacity/xyz-reader-starter-code/)
